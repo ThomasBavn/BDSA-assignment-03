@@ -10,13 +10,12 @@ public class User
 
     [StringLength(100)]
     [Required]
-    //mangler at tjekke for at den er unique
+    ////////////Skal tjekke for unique
     public string Email{ get; set; }
+    //[System.AttributeUsage(System.AttributeTargets.Field | System.AttributeTargets.Parameter | System.AttributeTargets.Property, AllowMultiple=false)]
+    //public sealed class EmailAddressAttribute : System.ComponentModel.DataAnnotations.DataTypeAttribute {};
+    
 
     public List<Task> Tasks{ get; set; }
     
-    
-    /*
-Email : string(100), required, unique
-    */
 }
