@@ -15,8 +15,4 @@ public class Task
     public Core.State State { get; set; }
     public virtual List<Tag> Tags {get; set;}
 
-
-    /*
-State : enum (New, Active, Resolved, Closed, Removed), required
-    */
 }
