@@ -4,8 +4,7 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
 namespace Assignment3;
-
-public class KanbanContextFactory : IDesignTimeDbContextFactory<KanbanContext>
+internal class KanbanContextFactory : IDesignTimeDbContextFactory<KanbanContext>
 {
     public KanbanContext CreateDbContext(string[] args)
     {
