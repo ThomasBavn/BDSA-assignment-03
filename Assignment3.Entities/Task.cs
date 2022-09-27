@@ -3,32 +3,16 @@ namespace Assignment3.Entities;
 
 public class Task
 {
-    /*public int Id { get; set; }
+    public Task()
+    {
+        Tags = new List<Tag>();
+    }
 
-    [StringLength(100)]
-    [Required]
+    public int Id { get; set; }
     public string Title { get; set; }
-    
-    public virtual User? AssignedTo { get; set; }
-
-    [MaxLength(int.MaxValue)]
+    public User? AssignedTo { get; set; }
     public string? Description { get; set; }
-
-    [Required]
-    [EnumDataType(typeof(State))]
-    public string State{ get; set; }
-
-    //Many-to-many reference
-    //public Tag Tags {get; set;}
-    public virtual ICollection<Tag> Tags { get; set; }*/
+    public Core.State State { get; set; }
+    public virtual List<Tag> Tags {get; set;}
 
 }
-
-    public enum State {
-        New,
-        Active,
-        Resolved,
-        Closed,
-        Removed
-    }
-    
