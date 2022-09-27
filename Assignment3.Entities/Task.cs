@@ -3,19 +3,27 @@ namespace Assignment3.Entities;
 
 public class Task
 {
-    public int Id { get; set; }
+    /*public int Id { get; set; }
 
     [StringLength(100)]
     [Required]
     public string Title { get; set; }
     
-    //Optional - is nullable
-    public User? AssignedTo { get; set; }
+    public virtual User? AssignedTo { get; set; }
 
     [MaxLength(int.MaxValue)]
     public string? Description { get; set; }
 
-    //[Required] - virker ikke, fordi det ikke er et property
+    [Required]
+    [EnumDataType(typeof(State))]
+    public string State{ get; set; }
+
+    //Many-to-many reference
+    //public Tag Tags {get; set;}
+    public virtual ICollection<Tag> Tags { get; set; }*/
+
+}
+
     public enum State {
         New,
         Active,
@@ -23,11 +31,4 @@ public class Task
         Closed,
         Removed
     }
-
-    public Tag Tags {get; set;}
-
-
-    /*
-State : enum (New, Active, Resolved, Closed, Removed), required
-    */
-}
+    
