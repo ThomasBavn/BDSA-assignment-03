@@ -5,9 +5,13 @@ using Assignment3;
 public class TaskRepository : ITaskRepository
 {
     readonly KanbanContext context;
+    //private int index;
     public TaskRepository(KanbanContext context)
     {
+
+
         this.context = context;
+        //index = context.Tasks.Max(t => t.Id) + 1;
     }
 
     public (Response Response, int TaskId) Create(TaskCreateDTO task)
@@ -18,16 +22,12 @@ public class TaskRepository : ITaskRepository
         if (context.Users.Find(task.AssignedToId) == null) return (Response.BadRequest, -1);
         //if (check.Count() > 0) return (Response.Conflict, -1); //return check first item id
         //var index = check.Count() + 1;
-        var maxId = 0;
-        foreach (var t in context.Tasks)
-        {
-            maxId = Math.Max(maxId, t.Id);
-        }
+
         var assignedTo = context.Users.Find(task.AssignedToId)!;
 
         var description = task.Description; //Description isn't used for anything
         var newTask = new Task();
-        newTask.Id = maxId + 1;
+        //newTask.Id = index++;
         newTask.Title = task.Title;
         newTask.Created = DateTime.UtcNow;
         newTask.AssignedTo = assignedTo;
@@ -100,7 +100,7 @@ public class TaskRepository : ITaskRepository
         foundTask.Description = task.Description;
         foundTask.Tags = CollectTags(task.Tags);
         foundTask.State = task.State;
-        foundTask.StateUpdated = DateTime.UtcNow;
+        //foundTask.StateUpdated = DateTime.UtcNow;
 
         context.SaveChanges();
         return Response.Updated;
@@ -144,13 +144,8 @@ public class TaskRepository : ITaskRepository
             if (existingTag.Any()) newTags.Add(existingTag.First()); //if tag with name exists add it
             else
             { //else make a new tag with that name
-                var maxID = 0;
-                foreach (var t in context.Tags)
-                {
-                    maxID = Math.Max(maxID, t.Id);
-                }
+                //newTag.Id = index++;
                 var newTag = new Tag();
-                newTag.Id = maxID + 1;
                 newTag.Name = tagname;
                 newTags.Add(newTag);
             }

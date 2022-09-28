@@ -1,23 +1,20 @@
 namespace Assignment3.Entities;
 public class UserRepository : IUserRepository
 {
+    //private int index;
     readonly KanbanContext context;
     public UserRepository(KanbanContext context)
     {
         this.context = context;
+        //index = context.Users.Max(u => u.UserId) + 1;
     }
 
     public (Response Response, int UserId) Create(UserCreateDTO user)
     {
         if (context.Users.Where(u => u.Email.Equals(user.Email)).Any()) return (Response.Conflict, -1);
-        int maxID = 0;
-        foreach (var us in context.Users)
-        {
-            maxID = Math.Max(maxID, us.Id);
-        }
         context.Users.Count();
         User u = new User();
-        u.Id = maxID + 1;
+        //u.Id = index++;
         u.Name = user.Name;
         u.Email = user.Email;
         context.Users.Add(u);
@@ -33,7 +30,8 @@ public class UserRepository : IUserRepository
         User user = search.First();
         if (!user.Tasks.Any() || force)
         {
-            foreach (var t in user.Tasks) {
+            foreach (var t in user.Tasks)
+            {
                 t.AssignedTo = null;
             }
             context.Users.Remove(user);
@@ -61,10 +59,10 @@ public class UserRepository : IUserRepository
         if (!search.Any()) return Response.NotFound;
         var foundUser = search.First();
         if (context.Users.Find(user.Id) != null) return Response.Conflict;
-        foundUser.Id = user.Id;
+        //foundUser.Id = user.Id;
         foundUser.Name = user.Name;
         foundUser.Email = user.Email;
-        
+
         context.SaveChanges();
         return Response.Updated;
     }

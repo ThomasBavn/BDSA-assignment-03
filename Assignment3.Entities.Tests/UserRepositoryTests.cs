@@ -1,6 +1,6 @@
 namespace Assignment3.Entities.Tests;
 
-public class UserRepositoryTests
+public sealed class UserRepositoryTests : IDisposable
 {
 
     private readonly KanbanContext _context;
@@ -14,7 +14,9 @@ public class UserRepositoryTests
         builder.UseSqlite(connection);
         var context = new KanbanContext(builder.Options);
         context.Database.EnsureCreated();
+        var users = GetUsers();
 
+        context.AddRange(users);
         context.SaveChanges();
 
         _context = context;
@@ -64,7 +66,7 @@ public class UserRepositoryTests
         _context.Users.AddRange(users);
         var userWithTasks = users[1];
         //Arrange
-        var response = _repository.Delete(userWithTasks.Id);
+        var response = _repository.Delete(userWithTasks.UserId);
         //Act
         Assert.Equal(Response.Conflict, response);
 
@@ -77,7 +79,7 @@ public class UserRepositoryTests
         _context.Users.AddRange(users);
         var userWithoutTasks = users[0];
         //Arrange
-        var response = _repository.Delete(userWithoutTasks.Id);
+        var response = _repository.Delete(userWithoutTasks.UserId);
         //Act
         Assert.Equal(Response.Deleted, response);
     }
@@ -90,7 +92,7 @@ public class UserRepositoryTests
         _context.Users.AddRange(users);
         var userWithTasks = users[1];
         //Arrange
-        var response = _repository.Delete(userWithTasks.Id, true);
+        var response = _repository.Delete(userWithTasks.UserId, true);
         //Act
         Assert.Equal(Response.Deleted, response);
     }
@@ -112,9 +114,9 @@ public class UserRepositoryTests
         var users = GetUsers();
         _context.Users.AddRange(users);
         //Arrange
-        var user = _repository.Find(users[0].Id);
+        var user = _repository.Find(users[0].UserId);
         var converted = new User();
-        converted.Id = user.Id;
+        converted.UserId = user.Id;
         converted.Name = user.Name;
         converted.Email = user.Email;
 
@@ -144,7 +146,7 @@ public class UserRepositoryTests
         foreach (var user in allUsers)
         {
             var convertedUser = new User();
-            convertedUser.Id = user.Id;
+            convertedUser.UserId = user.Id;
             convertedUser.Name = user.Name;
             convertedUser.Email = user.Email;
             converted.Add(convertedUser);
@@ -158,14 +160,14 @@ public class UserRepositoryTests
     private List<Task> GetTasks()
     {
         var task1 = new Task();
-        task1.Id = 0;
+        task1.TaskId = 0;
         task1.Title = "Task1";
         task1.Description = "Description1";
         task1.Created = DateTime.Now;
         task1.State = State.New;
 
         var task2 = new Task();
-        task2.Id = 1;
+        task2.TaskId = 1;
         task2.Title = "Task2";
         task2.Description = "Description2";
         task2.Created = DateTime.Now;
@@ -178,30 +180,35 @@ public class UserRepositoryTests
         var tasks = GetTasks();
 
         var tag1 = new Tag();
-        tag1.Id = 0;
+        tag1.TagId = 0;
         tag1.Name = "Tag1";
 
         var tag2 = new Tag();
-        tag2.Id = 1;
+        tag2.TagId = 1;
         tag2.Name = "Tag2";
 
         var user1 = new User();
-        user1.Id = 0;
+        user1.UserId = 0;
         user1.Name = "User1";
         user1.Email = "user1@example.com";
 
         var hasTasks = new User();
-        hasTasks.Id = 1;
+        hasTasks.UserId = 1;
         hasTasks.Name = "User2";
         hasTasks.Email = "user2@example.com";
         hasTasks.Tasks = new List<Task>() { tasks[0], tasks[1] };
 
         var user3 = new User();
-        user3.Id = 2;
+        user3.UserId = 2;
         user3.Name = "user3";
         user3.Email = "user3@example.com";
 
         return new List<User>() { user1, hasTasks, user3 };
     }
 
+    public void Dispose()
+    {
+        _context.Database.EnsureDeleted();
+        _context.Dispose();
+    }
 }

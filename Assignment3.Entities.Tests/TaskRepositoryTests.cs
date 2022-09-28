@@ -1,6 +1,6 @@
 namespace Assignment3.Entities.Tests;
 
-public class TaskRepositoryTests
+public sealed class TaskRepositoryTests : IDisposable
 {
     private readonly KanbanContext _context;
     private readonly TaskRepository _repository;
@@ -20,5 +20,10 @@ public class TaskRepositoryTests
         _repository = new TaskRepository(_context);
 
 
+    }
+
+    public void Dispose()
+    {
+        _context.Dispose();
     }
 }
